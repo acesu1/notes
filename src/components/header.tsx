@@ -2,6 +2,7 @@ import { ModeToggle } from './mode-toggle'
 import { NavLink } from './nav-link'
 import { Separator } from './ui/separator'
 import { NotepadText, UserRoundPen } from 'lucide-react'
+import { HeaderActions } from './header-actions'
 
 export function Header() {
   return (
@@ -18,8 +19,10 @@ export function Header() {
           </NavLink>
         </nav>
 
-        <div className="ml-auto flex items-center space-x-2">
+        <div className="ml-auto flex items-center gap-3">
           <ModeToggle />
+
+          <HeaderActions />
         </div>
       </div>
     </div>
