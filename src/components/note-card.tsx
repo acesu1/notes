@@ -15,7 +15,7 @@ export function NoteCard({ note }: { note: Doc<'notes'> }) {
         <CardTitle>{note.title}</CardTitle>
         <CardDescription>{note.description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="break-words">
         <p>{note.text}</p>
       </CardContent>
       <CardFooter>
