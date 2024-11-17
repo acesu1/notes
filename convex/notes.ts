@@ -38,3 +38,25 @@ export const getNotes = query({
       .collect()
   },
 })
+
+export const deleteNote = mutation({
+  args: {
+    noteId: v.id('notes'),
+  },
+
+  async handler(ctx, args) {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier
+
+    if (!userId) {
+      throw new ConvexError('You must be logged in to create a note')
+    }
+
+    const note = await ctx.db.get(args.noteId)
+
+    if (!note) {
+      throw new ConvexError('Note not found')
+    }
+
+    await ctx.db.delete(args.noteId)
+  },
+})
