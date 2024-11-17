@@ -13,8 +13,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useMutation } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { LoadingButton } from './loading-button'
+import type { Doc } from 'convex/_generated/dataModel'
+import { useEffect } from 'react'
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -32,27 +34,45 @@ const formSchema = z.object({
     .max(1000),
 })
 
-export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {
-  const createNote = useMutation(api.notes.createNote)
+export function EditNoteForm({
+  note,
+  onEdit,
+}: {
+  note: Doc<'notes'>
+  onEdit: () => void
+}) {
+  const getNote = useQuery(api.notes.getNote, { nodeId: note._id })
+  const editNote = useMutation(api.notes.editNote)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      text: '',
+      title: getNote?.title ?? '',
+      description: getNote?.description ?? '',
+      text: getNote?.text ?? '',
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createNote({
+    await editNote({
+      noteId: note._id,
       title: values.title,
       description: values.description,
       text: values.text,
     })
 
-    onCreate()
+    onEdit()
   }
+
+  useEffect(() => {
+    if (getNote) {
+      form.reset({
+        title: getNote.title,
+        description: getNote.description,
+        text: getNote.text,
+      })
+    }
+  }, [getNote, form])
 
   return (
     <Form {...form}>
@@ -62,7 +82,7 @@ export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome da anotação</FormLabel>
+              <FormLabel>Novo nome da anotação</FormLabel>
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>
@@ -75,7 +95,7 @@ export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Descrição</FormLabel>
+              <FormLabel>Nova descrição</FormLabel>
               <FormControl>
                 <Input {...field} autoComplete="off" />
               </FormControl>
@@ -88,7 +108,7 @@ export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {
           name="text"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Texto</FormLabel>
+              <FormLabel>Novo texto</FormLabel>
               <FormControl>
                 <Textarea {...field} autoComplete="off" />
               </FormControl>
@@ -98,9 +118,9 @@ export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {
         />
         <LoadingButton
           isLoading={form.formState.isSubmitting}
-          loadingText="Criando..."
+          loadingText="Editando..."
         >
-          Criar anotação
+          Editar anotação
         </LoadingButton>
       </form>
     </Form>
