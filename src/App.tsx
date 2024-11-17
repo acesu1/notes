@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Header } from './components/header'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,6 +17,7 @@ import { api } from '../convex/_generated/api'
 
 export function App() {
   const notes = useQuery(api.notes.getNotes)
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="flex min-h-screen flex-col antialiased">
@@ -23,7 +25,7 @@ export function App() {
       <div className="flex flex-1 flex-col gap-8 p-8 pt-12">
         <div className="flex justify-between items-center">
           <h2 className="text-3xl font-bold tracking-tight">Anotações</h2>
-          <Sheet>
+          <Sheet onOpenChange={setIsOpen} open={isOpen}>
             <SheetTrigger asChild>
               <Button>Criar anotação</Button>
             </SheetTrigger>
@@ -36,7 +38,7 @@ export function App() {
                   salve sua nota para referência futura.
                 </SheetDescription>
               </SheetHeader>
-              <CreateNoteForm />
+              <CreateNoteForm onCreate={() => setIsOpen(false)} />
             </SheetContent>
           </Sheet>
         </div>
