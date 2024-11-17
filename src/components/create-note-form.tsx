@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useMutation } from 'convex/react'
+import { LoadingButton } from './loading-button'
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -32,7 +33,7 @@ const formSchema = z.object({
     .max(1000),
 })
 
-export function CreateNoteForm() {
+export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {
   const createNote = useMutation(api.notes.createNote)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,6 +51,8 @@ export function CreateNoteForm() {
       description: values.description,
       text: values.text,
     })
+
+    onCreate()
   }
 
   return (
@@ -62,7 +65,7 @@ export function CreateNoteForm() {
             <FormItem>
               <FormLabel>Nome da anotação</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +78,7 @@ export function CreateNoteForm() {
             <FormItem>
               <FormLabel>Descrição</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,13 +91,18 @@ export function CreateNoteForm() {
             <FormItem>
               <FormLabel>Texto</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} autoComplete="off" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Enviar</Button>
+        <LoadingButton
+          isLoading={form.formState.isSubmitting}
+          loadingText="Criando..."
+        >
+          Criar anotação
+        </LoadingButton>
       </form>
     </Form>
   )
