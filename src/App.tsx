@@ -20,16 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 
 import { Textarea } from './components/ui/textarea'
+import { NoteCard } from './components/note-card'
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -116,22 +109,7 @@ export function App() {
         </div>
         <div className="grid grid-cols-4 gap-8">
           {Array.from({ length: 10 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <CardTitle>Praticar corrida</CardTitle>
-                <CardDescription>Ter uma vida saudável</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  Create a new note to keep track of your ideas, tasks, or
-                  important details. Fill out the fields below and save your
-                  note for future reference.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
-            </Card>
+            <NoteCard key={i} />
           ))}
         </div>
       </div>
