@@ -11,8 +11,12 @@ import {
 
 import { NoteCard } from './components/note-card'
 import { CreateNoteForm } from './components/create-note-form'
+import { useQuery } from 'convex/react'
+import { api } from '../convex/_generated/api'
 
 export function App() {
+  const notes = useQuery(api.notes.getNotes)
+
   return (
     <div className="flex min-h-screen flex-col antialiased">
       <Header />
@@ -37,9 +41,7 @@ export function App() {
           </Sheet>
         </div>
         <div className="grid grid-cols-4 gap-8">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <NoteCard key={i} />
-          ))}
+          {notes?.map((note) => <NoteCard key={note._id} note={note} />)}
         </div>
       </div>
     </div>

@@ -6,20 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import type { Doc } from 'convex/_generated/dataModel'
 
-export function NoteCard() {
+export function NoteCard({ note }: { note: Doc<'notes'> }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Praticar corrida</CardTitle>
-        <CardDescription>Ter uma vida saudável</CardDescription>
+        <CardTitle>{note.title}</CardTitle>
+        <CardDescription>{note.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>
-          Create a new note to keep track of your ideas, tasks, or important
-          details. Fill out the fields below and save your note for future
-          reference.
-        </p>
+        <p>{note.text}</p>
       </CardContent>
       <CardFooter>
         <p>Card Footer</p>
