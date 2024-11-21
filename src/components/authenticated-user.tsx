@@ -13,6 +13,7 @@ import {
 import { Button } from './ui/button'
 import { CreateNoteForm } from './create-note-form'
 import { NoteCard } from './note-card'
+import { CardSkeleton } from './card-skeleton'
 
 export function AuthenticatedUser() {
   const notes = useQuery(api.notes.getNotes)
@@ -40,8 +41,11 @@ export function AuthenticatedUser() {
             </SheetContent>
           </Sheet>
         </div>
+
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-          {notes?.map((note) => <NoteCard key={note._id} note={note} />)}
+          {notes
+            ? notes.map((note) => <NoteCard key={note._id} note={note} />)
+            : new Array(8).fill('').map((_, i) => <CardSkeleton key={i} />)}
         </div>
       </div>
     </div>
